@@ -1,0 +1,32 @@
+﻿using CRMGuru.TestTaskWpf.View.UserControls;
+using CRMGuru.TestTaskWpf.View.Windows;
+using CRMGuru.TestTaskWpf.ViewModels.Base;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Controls;
+
+namespace CRMGuru.TestTaskWpf.ViewModels
+{
+    /// <summary>
+    /// Модель представления главного окна
+    /// </summary>
+    internal class MainWindowViewModel : ViewModel
+    {
+        public string Title { get; set; } = "Тестовое задание для CRMGuru";
+
+        private UserControl _userControl;
+
+        public UserControl CurrenUserControl
+        {
+            get => _userControl;
+            set => Set(ref _userControl, value);
+        }
+
+        public MainWindowViewModel(NavigationService navigation)
+        {
+            navigation.OnPageChanged += userControl => CurrenUserControl = userControl; //подписываемся на навигацию для пооказа текущей страницы
+            navigation.Navigate(new StartUserControl()); //первая страница, страница входа
+        }
+    }
+}
