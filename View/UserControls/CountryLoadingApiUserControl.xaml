@@ -55,7 +55,9 @@
                     Maximum="100"
                     Minimum="0"
                     Visibility="{Binding LoadingStatus, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Converter={StaticResource bvc}}"
-                    Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Style="{StaticResource MaterialDesignLinearProgressBar}"/>
+                
                 <TextBox
                     Margin="80,90,80,5"
                     materialDesign:HintAssist.Hint="Введите название страны на английском"

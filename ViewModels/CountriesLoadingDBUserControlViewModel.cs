@@ -8,6 +8,7 @@ using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -19,6 +20,9 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         private readonly NavigationService _navigation;
         private readonly IDbService _dbServices;
         private IEnumerable<Country> _countries;
+        private int _currentProgress;
+        private bool _loadingStatus;
+        private CancellationTokenSource _cts;
 
         /// <summary>
         /// Коллекция стран
@@ -27,6 +31,24 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         {
             get => _countries;
             set => Set(ref _countries, value);
+        }
+
+        /// <summary>
+        /// Статус показа полосы загрузки
+        /// </summary>
+        public bool LoadingStatus
+        {
+            get => _loadingStatus;
+            set => Set(ref _loadingStatus, value);
+        }
+
+        /// <summary>
+        /// Служит для анимации загрузочной строки
+        /// </summary>
+        public int CurrentProgress
+        {
+            get => _currentProgress;
+            set => Set(ref _currentProgress, value);
         }
 
         public CountriesLoadingDBUserControlViewModel(NavigationService navigation, IDbService dbServices)
@@ -44,14 +66,41 @@ namespace CRMGuru.TestTaskWpf.ViewModels
 
         public async Task LoagingCountries()
         {
+            _cts = new CancellationTokenSource();
+            Task Loader = new Task(ProgressBar, _cts.Token);
+            Loader.Start();
+
             try
             {
                 await Task.Run(() => _countries = _dbServices.GetAll());
+                _cts.Cancel();
                 OnPropertyChanged("Countries");
             }
             catch (Exception e)
             {
                 MessageBox.Show($"Ошибка выполнения операции {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// вспомогательный метод который меняет прогресс бар 
+        /// </summary>        
+        private void ProgressBar()
+        {
+            LoadingStatus = true;
+            OnPropertyChanged("LoadingStatus");
+
+            for (int i = _currentProgress; i < 100; i++)
+            {
+                if (_cts.IsCancellationRequested)
+                {
+                    LoadingStatus = false;
+                    _currentProgress = 0;
+                    return;
+                }
+                _currentProgress++;
+                Thread.Sleep(50);
+                OnPropertyChanged("CurrentProgress");
             }
         }
     }

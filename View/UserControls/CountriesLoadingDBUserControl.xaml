@@ -10,7 +10,29 @@
     d:DesignWidth="800"
     DataContext="{Binding LoadingDBModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="bvc" />
+    </UserControl.Resources>
     <Grid>
+        <TextBlock
+                    Margin="0,12,0,0"
+                    HorizontalAlignment="Center"
+                    FontSize="8"
+                    Foreground="#FF4E4E4E"
+                    Text="Соединение с базой данных"
+                    Visibility="{Binding LoadingStatus, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource bvc}}" />
+
+        <ProgressBar
+                    Width="200"
+                    Height="6"
+                    Margin="0,5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Maximum="100"
+                    Minimum="0"
+                    Visibility="{Binding LoadingStatus, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource bvc}}"
+                    Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignLinearProgressBar}"/>
         <Border
             Grid.Row="1"
             Margin="15 40 15 5"
@@ -25,9 +47,8 @@
                     Foreground="DarkSlateGray"
                     Text="Страны в базе данных" />
 
-                <DataGrid
-                    Height="380"
-                    Margin="10"
+                <DataGrid                                    
+                    Margin="10 0 10 0"
                     AlternatingRowBackground="LightGray"
                     AutoGenerateColumns="False"
                     ItemsSource="{Binding Countries, UpdateSourceTrigger=PropertyChanged}"
@@ -35,34 +56,34 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.Name}"
+                            Binding="{Binding Name}"
                             Header="Название"
                             IsReadOnly="True" />
 
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.CountryCode}"
+                            Binding="{Binding CountryCode}"
                             Header="Код страны"
                             IsReadOnly="True" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.Сapital}"
+                            Binding="{Binding Сapital}"
                             Header="Столица"
                             IsReadOnly="True" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.Area}"
+                            Binding="{Binding Area}"
                             Header="Площадь"
                             IsReadOnly="True" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.Population}"
+                            Binding="{Binding Population}"
                             Header="Население"
                             IsReadOnly="True" />
 
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Countries.Region}"
+                            Binding="{Binding Region}"
                             Header="Регион"
                             IsReadOnly="True" />
 

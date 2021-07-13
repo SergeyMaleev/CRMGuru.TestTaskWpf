@@ -12,6 +12,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CRMGuru.TestTaskWpf.ViewModels
 {
@@ -22,8 +24,10 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         private readonly IDbService _dbServices;
         private RestСountry _country;
         private string _inputContryName;
-        private int _currentProgress = 0;
-        private bool _loadingStatus = false;
+        private int _currentProgress;
+        private bool _loadingStatus;
+        private CancellationTokenSource _cts;
+        
         /// <summary>
         /// Поле ввода страны пользователем
         /// </summary>
@@ -40,7 +44,8 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         {
             get => _loadingStatus;
             set => Set(ref _loadingStatus, value);
-        }       
+        } 
+        
         /// <summary>
         /// Служит для анимации загрузочной строки
         /// </summary>
@@ -69,14 +74,18 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         });
 
         public ICommand CountryLoadingApiCommand => new DelegateCommand( async () =>
-        {           
+        {
+            _cts = new CancellationTokenSource();
+            Task Loader = new Task(ProgressBar, _cts.Token);
+            Loader.Start();
             try
             {
                 var resultСountries = await _webServices.GetArrayAsync(InputContryName);
                 Country = resultСountries.First();
                 var loadingApiWindow = new ResualtLoadingApiWindow { CountryModel = Country };
+                _cts.Cancel();
                 loadingApiWindow.ShowDialog();
-
+                
                 if (loadingApiWindow.DialogResult == true)
                 {
                    
@@ -88,8 +97,8 @@ namespace CRMGuru.TestTaskWpf.ViewModels
                     Region = new Region { Name = Country.Region},
                     Сapital = new City { Name = Country.Capital}
                     });
-                    loadingApiWindow.Close();
 
+                    loadingApiWindow.Close();
                     MessageBox.Show("Успешно добавлено");
                 }
                 else
@@ -101,7 +110,30 @@ namespace CRMGuru.TestTaskWpf.ViewModels
             {
                 MessageBox.Show($"Ошибка выполнения операции {e.Message}");
             }
+          
         }, () => !String.IsNullOrEmpty(InputContryName));
-   
+
+
+        /// <summary>
+        /// вспомогательный метод который меняет прогресс бар 
+        /// </summary>        
+        private void ProgressBar()
+        {
+            LoadingStatus = true;
+            OnPropertyChanged("LoadingStatus");
+
+            for (int i = _currentProgress; i < 100; i++)
+            {
+                if (_cts.IsCancellationRequested)
+                {
+                    LoadingStatus = false;
+                    _currentProgress = 0;
+                    return;
+                }
+                _currentProgress++;
+                Thread.Sleep(50);
+                OnPropertyChanged("CurrentProgress");
+            }                 
+        }
     }
 }
