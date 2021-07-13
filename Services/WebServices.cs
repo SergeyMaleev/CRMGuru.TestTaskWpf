@@ -39,7 +39,7 @@ namespace CRMGuru.TestTaskWpf.Services
             }
             else
             {                              
-                throw new Exception(await res.Content.ReadAsStringAsync());
+                throw new Exception(await res.Content.ReadAsStringAsync().ConfigureAwait(false));
             }         
         }
     }

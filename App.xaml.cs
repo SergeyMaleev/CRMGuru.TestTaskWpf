@@ -3,30 +3,24 @@ using CRMGuru.TestTaskWpf.Services;
 using CRMGuru.TestTaskWpf.Services.Interrfaces;
 using CRMGuru.TestTaskWpf.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace CRMGuru.TestTaskWpf
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : IDesignTimeDbContextFactory<EfDataContext>
+    public partial class App
     {
         private static readonly ServiceProvider _provider;
 
         public static IConfiguration Configuration { get; private set; }
 
-        static App ()
+        static App()
         {
             var services = new ServiceCollection();
 
@@ -38,7 +32,6 @@ namespace CRMGuru.TestTaskWpf
                 Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IDbService, DbServices>();
-
             services.AddScoped<StartUserControlViewModel>();
             services.AddScoped<MainWindowViewModel>();
             services.AddTransient<CountriesLoadingDBUserControlViewModel>();
@@ -50,13 +43,5 @@ namespace CRMGuru.TestTaskWpf
         }
         
         public static T Resolve<T>() => _provider.GetRequiredService<T>();
-
-        public EfDataContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<EfDataContext>();
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-
-            return new EfDataContext(optionsBuilder.Options);
-        }
     }
 }

@@ -1,14 +1,10 @@
-﻿using CRMGuru.TestTaskWpf.Context;
-using CRMGuru.TestTaskWpf.Models;
+﻿using CRMGuru.TestTaskWpf.Models;
 using CRMGuru.TestTaskWpf.Services.Interrfaces;
 using CRMGuru.TestTaskWpf.View.UserControls;
 using CRMGuru.TestTaskWpf.View.Windows;
 using CRMGuru.TestTaskWpf.ViewModels.Base;
 using DevExpress.Mvvm;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Linq;
@@ -55,6 +51,9 @@ namespace CRMGuru.TestTaskWpf.ViewModels
             set => Set(ref _currentProgress, value);
         }
 
+        /// <summary>
+        /// Страна
+        /// </summary>
         public RestСountry Country
         {
             get => _country;
@@ -87,8 +86,7 @@ namespace CRMGuru.TestTaskWpf.ViewModels
                 loadingApiWindow.ShowDialog();
                 
                 if (loadingApiWindow.DialogResult == true)
-                {
-                   
+                {                   
                     await _dbServices.Add(new Country {
                     Name = Country.Name,
                     CountryCode = Country.Alpha3Code,
@@ -109,8 +107,7 @@ namespace CRMGuru.TestTaskWpf.ViewModels
             catch (Exception e)
             {
                 MessageBox.Show($"Ошибка выполнения операции {e.Message}");
-            }
-          
+            }         
         }, () => !String.IsNullOrEmpty(InputContryName));
 
 

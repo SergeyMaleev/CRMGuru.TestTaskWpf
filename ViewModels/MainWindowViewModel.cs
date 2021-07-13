@@ -1,11 +1,5 @@
-﻿using CRMGuru.TestTaskWpf.Context;
-using CRMGuru.TestTaskWpf.View.UserControls;
-using CRMGuru.TestTaskWpf.View.Windows;
+﻿using CRMGuru.TestTaskWpf.View.UserControls;
 using CRMGuru.TestTaskWpf.ViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Controls;
 
 namespace CRMGuru.TestTaskWpf.ViewModels

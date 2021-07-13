@@ -1,10 +1,4 @@
-﻿using CRMGuru.TestTaskWpf.Context;
-using CRMGuru.TestTaskWpf.Services.Interrfaces;
-using CRMGuru.TestTaskWpf.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CRMGuru.TestTaskWpf.ViewModels;
 
 namespace CRMGuru.TestTaskWpf
 {

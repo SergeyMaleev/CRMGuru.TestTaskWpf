@@ -1,13 +1,10 @@
-﻿using CRMGuru.TestTaskWpf.Context;
-using CRMGuru.TestTaskWpf.Models;
-using CRMGuru.TestTaskWpf.Services;
+﻿using CRMGuru.TestTaskWpf.Models;
 using CRMGuru.TestTaskWpf.Services.Interrfaces;
 using CRMGuru.TestTaskWpf.View.UserControls;
 using CRMGuru.TestTaskWpf.ViewModels.Base;
 using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,7 +12,7 @@ using System.Windows.Input;
 
 namespace CRMGuru.TestTaskWpf.ViewModels
 {
-    public class CountriesLoadingDBUserControlViewModel : ViewModel
+    internal class CountriesLoadingDBUserControlViewModel : ViewModel
     {
         private readonly NavigationService _navigation;
         private readonly IDbService _dbServices;
@@ -55,7 +52,7 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         {
             _navigation = navigation;
             _dbServices = dbServices;
-            LoagingCountries();
+            LoagingCountries().ConfigureAwait(false);
         }
 
         public ICommand DouwnCommand => new DelegateCommand(() =>
@@ -63,7 +60,10 @@ namespace CRMGuru.TestTaskWpf.ViewModels
             _navigation.Navigate(new StartUserControl());
         });
 
-
+        /// <summary>
+        /// Загружает страны из базы данных
+        /// </summary>
+        /// <returns></returns>
         public async Task LoagingCountries()
         {
             _cts = new CancellationTokenSource();
