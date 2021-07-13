@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace CRMGuru.TestTask.Interfaces.Models
+namespace CRMGuru.TestTaskWpf.Models
 {
     public class Country
     {
@@ -31,7 +31,7 @@ namespace CRMGuru.TestTask.Interfaces.Models
         /// <summary>
         /// Население
         /// </summary>
-        public uint Population { get; set; }
+        public int Population { get; set; }
 
         /// <summary>
         /// Регион

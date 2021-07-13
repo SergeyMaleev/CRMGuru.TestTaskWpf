@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CRMGuru.TestTask.Interfaces.Models
+namespace CRMGuru.TestTaskWpf.Models
 {
     /// <summary>
     /// Модель данных предоставляемая Api restcountries.eu
     /// </summary>
-    public class Restcountries
+    public class RestСountry
     {
         /// <summary>
         /// Название
@@ -41,6 +41,6 @@ namespace CRMGuru.TestTask.Interfaces.Models
         /// Площадь
         /// </summary>
         [JsonPropertyName("area")]
-        public double Area { get; set; }      
+        public double Area { get; set; }
     }  
 }

@@ -19,7 +19,7 @@ namespace CRMGuru.TestTaskWpf.Context.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CRMGuru.TestTask.Interfaces.Models.City", b =>
+            modelBuilder.Entity("CRMGuru.TestTaskWpf.Models.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +34,7 @@ namespace CRMGuru.TestTaskWpf.Context.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("CRMGuru.TestTask.Interfaces.Models.Country", b =>
+            modelBuilder.Entity("CRMGuru.TestTaskWpf.Models.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,8 +50,8 @@ namespace CRMGuru.TestTaskWpf.Context.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Population")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Population")
+                        .HasColumnType("int");
 
                     b.Property<int?>("RegionId")
                         .HasColumnType("int");
@@ -68,7 +68,7 @@ namespace CRMGuru.TestTaskWpf.Context.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("CRMGuru.TestTask.Interfaces.Models.Region", b =>
+            modelBuilder.Entity("CRMGuru.TestTaskWpf.Models.Region", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,13 +83,13 @@ namespace CRMGuru.TestTaskWpf.Context.Migrations
                     b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("CRMGuru.TestTask.Interfaces.Models.Country", b =>
+            modelBuilder.Entity("CRMGuru.TestTaskWpf.Models.Country", b =>
                 {
-                    b.HasOne("CRMGuru.TestTask.Interfaces.Models.Region", "Region")
+                    b.HasOne("CRMGuru.TestTaskWpf.Models.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId");
 
-                    b.HasOne("CRMGuru.TestTask.Interfaces.Models.City", "Сapital")
+                    b.HasOne("CRMGuru.TestTaskWpf.Models.City", "Сapital")
                         .WithMany()
                         .HasForeignKey("СapitalId");
 

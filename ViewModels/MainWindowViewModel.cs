@@ -1,6 +1,8 @@
-﻿using CRMGuru.TestTaskWpf.View.UserControls;
+﻿using CRMGuru.TestTaskWpf.Context;
+using CRMGuru.TestTaskWpf.View.UserControls;
 using CRMGuru.TestTaskWpf.View.Windows;
 using CRMGuru.TestTaskWpf.ViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,9 +26,9 @@ namespace CRMGuru.TestTaskWpf.ViewModels
         }
 
         public MainWindowViewModel(NavigationService navigation)
-        {
-            navigation.OnPageChanged += userControl => CurrenUserControl = userControl; //подписываемся на навигацию для пооказа текущей страницы
-            navigation.Navigate(new StartUserControl()); //первая страница, страница входа
+        {            
+            navigation.OnPageChanged += userControl => CurrenUserControl = userControl; //подписываемся на навигацию для пооказа текущей страницы           
+            navigation.Navigate(new StartUserControl()); //первая страница, страница входа            
         }
     }
 }

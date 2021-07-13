@@ -1,15 +1,16 @@
-﻿using CRMGuru.TestTask.WebApiClient;
-using CRMGuru.TestTaskWpf.Context;
+﻿using CRMGuru.TestTaskWpf.Context;
 using CRMGuru.TestTaskWpf.Services;
+using CRMGuru.TestTaskWpf.Services.Interrfaces;
 using CRMGuru.TestTaskWpf.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,44 +20,43 @@ namespace CRMGuru.TestTaskWpf
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : IDesignTimeDbContextFactory<EfDataContext>
     {
-        private static IHost _hosting;
-        public static IHost Hosting => _hosting ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
-        
-        public static IServiceProvider Services => Hosting.Services;
+        private static readonly ServiceProvider _provider;
 
-        private static IHostBuilder CreateHostBuilder(string[] Args) => Host
-            .CreateDefaultBuilder(Args)
-            .ConfigureServices(ConfigureServices);
+        public static IConfiguration Configuration { get; private set; }
 
-        private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
+        static App ()
         {
+            var services = new ServiceCollection();
+
+            var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            Configuration = config.Build();
+
             services.AddDbContext<EfDataContext>(options => options.UseSqlServer(
-                host.Configuration.GetConnectionString("DefaultConnection")));
-           
+                Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IDbService, DbServices>();
+
+            services.AddScoped<StartUserControlViewModel>();
             services.AddScoped<MainWindowViewModel>();
+            services.AddTransient<CountriesLoadingDBUserControlViewModel>();
+            services.AddTransient<CountryLoadingApiUserControlViewModel>();
+            services.AddHttpClient<IWebService, WebServices>(client => client.BaseAddress = new Uri(Configuration["RestCountries"]));
             services.AddSingleton<NavigationService>();
-            services.AddHttpClient<IWebServices, WebServices>(client => client.BaseAddress = new Uri(host.Configuration["RestCountries"]));
 
-            //services.AddScoped<IAddCountryService, AddCountryService>();
-            //services.AddScoped<ILoadContryService, LoadContryService>();
-
-            
+            _provider = services.BuildServiceProvider();
         }
+        
+        public static T Resolve<T>() => _provider.GetRequiredService<T>();
 
-        protected override async void OnStartup(StartupEventArgs e)
+        public EfDataContext CreateDbContext(string[] args)
         {
-            var host = Hosting;
-            base.OnStartup(e);
-            await host.StartAsync().ConfigureAwait(true);
-        }
+            var optionsBuilder = new DbContextOptionsBuilder<EfDataContext>();
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
-        protected override async void OnExit(ExitEventArgs e)
-        {
-            using var host = Hosting;
-            base.OnExit(e);
-            await host.StopAsync().ConfigureAwait(false);
+            return new EfDataContext(optionsBuilder.Options);
         }
     }
 }

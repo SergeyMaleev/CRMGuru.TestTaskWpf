@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRMGuru.TestTask.Interfaces.Models
+namespace CRMGuru.TestTaskWpf.Models
 {
     public class City
     {

@@ -1,5 +1,5 @@
-﻿using CRMGuru.TestTask.Interfaces.Models;
-using CRMGuru.TestTaskWpf.Services;
+﻿using CRMGuru.TestTaskWpf.Models;
+using CRMGuru.TestTaskWpf.Services.Interrfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,21 +7,21 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CRMGuru.TestTask.WebApiClient
+namespace CRMGuru.TestTaskWpf.Services
 {
-    public class WebServices : IWebServices
+    public class WebServices : IWebService
     {
         private readonly HttpClient _httpClient;
 
         public WebServices(HttpClient httpClient) => _httpClient = httpClient;
 
-        public async Task<Restcountries> GetAsync(string name, CancellationToken cancel = default)
+        public async Task<RestСountry> GetAsync(string name, CancellationToken cancel = default)
         {
             var res = await _httpClient.GetAsync(name, cancel).ConfigureAwait(false);
             
             if (res.IsSuccessStatusCode)
             {
-                return await _httpClient.GetFromJsonAsync<Restcountries>(name, cancel).ConfigureAwait(false);
+                return await _httpClient.GetFromJsonAsync<RestСountry>(name, cancel).ConfigureAwait(false);
             }
             else
             {                     
@@ -29,13 +29,13 @@ namespace CRMGuru.TestTask.WebApiClient
             }          
         }
 
-        public async Task<IEnumerable<Restcountries>> GetArrayAsync(string name, CancellationToken cancel = default)
+        public async Task<IEnumerable<RestСountry>> GetArrayAsync(string name, CancellationToken cancel = default)
         {
             var res = await _httpClient.GetAsync(name, cancel).ConfigureAwait(false);
             
             if (res.IsSuccessStatusCode)
             {
-                return await _httpClient.GetFromJsonAsync<Restcountries[]>(name, cancel).ConfigureAwait(false);
+                return await _httpClient.GetFromJsonAsync<RestСountry[]>(name, cancel).ConfigureAwait(false);
             }
             else
             {                              
